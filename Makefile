@@ -1,6 +1,6 @@
 all: id3v2
 
-VERSION=0.1.11
+VERSION=0.1.12
 
 PREFIX=	/opt/local
 CXXFLAGS+=	-Wall -I${PREFIX}/include/ -DVERSION="\"${VERSION}\"" #-DSORT_RUNTIME
@@ -22,7 +22,6 @@ clean:
 tarball:
 	ln -s . id3v2-${VERSION}
 	tar zhcf id3v2-${VERSION}.tar.gz  \
-		--exclude=CVS --exclude-from .cvsignore \
 		--exclude=id3v2-${VERSION}/id3v2-${VERSION} \
 		id3v2-${VERSION}
 	rm id3v2-${VERSION}
