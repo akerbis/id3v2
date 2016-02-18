@@ -712,13 +712,27 @@ int main( int argc, char *argv[])
                << ", " << nDataSize << " bytes";
           break;
         }
+        // The payload is a 33-bit MPEG-2 Program Elementary Stream timestamp
+        // expressed as a big-endian 8-octet number, with the upper 31 bits set to zero
+        // http://danjean.developpez.com/video/mpeg-elementary-stream/
+        // https://github.com/flavioribeiro/nginx-audio-track-for-hls-module/issues/22
+        case ID3FID_PRIVATE:
+        {
+          if (strlen(frameList[ii].data) > 0) {
+            myFrame->Field(ID3FN_OWNER) = "com.apple.streaming.transportStreamTimestamp";
+            uint64_t tsTimestampInt = __builtin_bswap64(strtoull(frameList[ii].data, NULL, 10));
+            const unsigned char *tsTimestamp = (unsigned char *)&tsTimestampInt;
+            myFrame->Field(ID3FN_DATA).Set(tsTimestamp, 8);
+            myTag.AttachFrame(myFrame);
+          }
+          break;
+        }
         case ID3FID_AUDIOCRYPTO:
         case ID3FID_EQUALIZATION:
         case ID3FID_EVENTTIMING:
         case ID3FID_CDID:
         case ID3FID_MPEGLOOKUP:
         case ID3FID_OWNERSHIP:
-        case ID3FID_PRIVATE:
         case ID3FID_POSITIONSYNC:
         case ID3FID_BUFFERSIZE:
         case ID3FID_VOLUMEADJ:
