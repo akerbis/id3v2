@@ -720,7 +720,7 @@ int main( int argc, char *argv[])
         {
           if (strlen(frameList[ii].data) > 0) {
             myFrame->Field(ID3FN_OWNER) = "com.apple.streaming.transportStreamTimestamp";
-            uint64_t tsTimestampInt = __builtin_bswap64(strtoull(frameList[ii].data, NULL, 10));
+            unsigned long long tsTimestampInt = __builtin_bswap64(strtoull(frameList[ii].data, NULL, 10));
             const unsigned char *tsTimestamp = (unsigned char *)&tsTimestampInt;
             myFrame->Field(ID3FN_DATA).Set(tsTimestamp, 8);
             myTag.AttachFrame(myFrame);
